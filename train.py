@@ -62,6 +62,7 @@ parser.add_argument('--validation_size', default=5000, type=int,
                     help='The number of images to use for validation.')
 parser.add_argument('--validation_epoch', default=2, type=int,
                     help='Output validation information every n iterations. If -1, do no validation.')
+# 是否只保存最后一个epoch的数据
 parser.add_argument('--keep_latest', dest='keep_latest', action='store_true',
                     help='Only keep the latest checkpoint instead of each one.')
 parser.add_argument('--keep_latest_interval', default=100000, type=int,
@@ -70,12 +71,16 @@ parser.add_argument('--dataset', default=None, type=str,
                     help='If specified, override the dataset specified in the config with this one (example: coco2017_dataset).')
 parser.add_argument('--no_log', dest='log', action='store_false',
                     help='Don\'t log per iteration information into log_folder.')
+# 是否保存gpu的信息
 parser.add_argument('--log_gpu', dest='log_gpu', action='store_true',
                     help='Include GPU information in the logs. Nvidia-smi tends to be slow, so set this with caution.')
+#是否保存itterrupt时的模型
 parser.add_argument('--no_interrupt', dest='interrupt', action='store_false',
                     help='Don\'t save an interrupt when KeyboardInterrupt is caught.')
 parser.add_argument('--batch_alloc', default=None, type=str,
                     help='If using multiple GPUS, you can set this to be a comma separated list detailing which GPUs should get what local batch size (It should add up to your total batch size).')
+
+#是否自动降低学习率
 parser.add_argument('--no_autoscale', dest='autoscale', action='store_false',
                     help='YOLACT will automatically scale the lr and the number of iterations depending on the batch size. Set this if you want to disable that.')
 
