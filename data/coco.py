@@ -73,6 +73,7 @@ class COCODetection(data.Dataset):
         self.root = image_path
         self.coco = COCO(info_file)
         
+        #啥意思？？
         self.ids = list(self.coco.imgToAnns.keys())
         if len(self.ids) == 0 or not has_gt:
             self.ids = list(self.coco.imgs.keys())
