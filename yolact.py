@@ -399,6 +399,7 @@ class Yolact(nn.Module):
     def __init__(self):
         super().__init__()
 
+        # 构建backbone
         self.backbone = construct_backbone(cfg.backbone)
 
         if cfg.freeze_bn:
@@ -412,14 +413,14 @@ class Yolact(nn.Module):
                 self.grid = torch.Tensor(np.load(cfg.mask_proto_grid_file))
                 self.num_grids = self.grid.size(0)
             else:
-                self.num_grids = 0
+                self.num_grids = 0   # 0
 
-            self.proto_src = cfg.mask_proto_src
+            self.proto_src = cfg.mask_proto_src  # 0
             
             if self.proto_src is None: in_channels = 3
             elif cfg.fpn is not None: in_channels = cfg.fpn.num_features
             else: in_channels = self.backbone.channels[self.proto_src]
-            in_channels += self.num_grids
+            in_channels += self.num_grids  # in_channels:256
 
             # The include_last_relu=false here is because we might want to change it to another function
             self.proto_net, cfg.mask_dim = make_net(in_channels, cfg.mask_proto_net, include_last_relu=False)
@@ -428,8 +429,8 @@ class Yolact(nn.Module):
                 cfg.mask_dim += 1
 
 
-        self.selected_layers = cfg.backbone.selected_layers
-        src_channels = self.backbone.channels
+        self.selected_layers = cfg.backbone.selected_layers  # [1,2,3]
+        src_channels = self.backbone.channels  # [256,512,1024,2048]
 
         if cfg.use_maskiou:
             self.maskiou_net = FastMaskIoUNet()
@@ -438,7 +439,7 @@ class Yolact(nn.Module):
             # Some hacky rewiring to accomodate the FPN
             self.fpn = FPN([src_channels[i] for i in self.selected_layers])
             self.selected_layers = list(range(len(self.selected_layers) + cfg.fpn.num_downsample))
-            src_channels = [cfg.fpn.num_features] * len(self.selected_layers)
+            src_channels = [cfg.fpn.num_features] * len(self.selected_layers)  # [256,256,256,256,256]
 
 
         self.prediction_layers = nn.ModuleList()
@@ -489,7 +490,8 @@ class Yolact(nn.Module):
                     del state_dict[key]
         self.load_state_dict(state_dict)
 
-    def init_weights(self, backbone_path):
+    # Yolact权重初始化
+    def init_weights(self, backbone_path):  # 
         """ Initialize weights for training. """
         # Initialize the backbone with the pretrained weights.
         self.backbone.init_backbone(backbone_path)
