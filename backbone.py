@@ -448,10 +448,10 @@ class VGGBackbone(nn.Module):
 
 def construct_backbone(cfg):
     """ Constructs a backbone given a backbone config object (see config.py). """
-    backbone = cfg.type(*cfg.args)
+    backbone = cfg.type(*cfg.args)  #[3,4,23,3],直接通过传入的层数信息构建一个backbone
 
     # Add downsampling layers until we reach the number we need
-    num_layers = max(cfg.selected_layers) + 1
+    num_layers = max(cfg.selected_layers) + 1  #cfg.selected_layers:[1,2,3]  num_layers = 4
 
     while len(backbone.layers) < num_layers:
         backbone.add_layer()
