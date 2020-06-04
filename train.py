@@ -229,8 +229,10 @@ def train():
         # backbone_path：'weights/resnet101_reducedfc.pth'
         yolact_net.init_weights(backbone_path=args.save_folder + cfg.backbone.path)
 
+    # SGD优化器
     optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=args.momentum,
                           weight_decay=args.decay)
+    # 计算Loss
     criterion = MultiBoxLoss(num_classes=cfg.num_classes,
                              pos_threshold=cfg.positive_iou_threshold,
                              neg_threshold=cfg.negative_iou_threshold,
@@ -257,12 +259,13 @@ def train():
     iteration = max(args.start_iter, 0)
     last_time = time.time()
 
-    epoch_size = len(dataset) // args.batch_size
-    num_epochs = math.ceil(cfg.max_iter / epoch_size)
+    epoch_size = len(dataset) // args.batch_size  #258
+    num_epochs = math.ceil(cfg.max_iter / epoch_size)  #3101
     
     # Which learning rate adjustment step are we on? lr' = lr * gamma ^ step_index
     step_index = 0
 
+    # 创建数据集加载对象
     data_loader = data.DataLoader(dataset, args.batch_size,
                                   num_workers=args.num_workers,
                                   shuffle=True, collate_fn=detection_collate,
@@ -272,8 +275,8 @@ def train():
     save_path = lambda epoch, iteration: SavePath(cfg.name, epoch, iteration).get_path(root=args.save_folder)
     time_avg = MovingAverage()
 
-    global loss_types # Forms the print order
-    loss_avgs  = { k: MovingAverage(100) for k in loss_types }
+    global loss_types # Forms the print order # {'B', 'C', 'M', 'P', 'D', 'E', 'S', 'I'}
+    loss_avgs  = { k: MovingAverage(100) for k in loss_types }  
 
     print('Begin training!')
     print()
