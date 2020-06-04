@@ -105,6 +105,7 @@ class Config(object):
 
 # ----------------------- DATASETS ----------------------- #
 
+#==========================================COCO========================================#
 dataset_base = Config({
     'name': 'Base Dataset',
 
@@ -155,6 +156,7 @@ coco2017_testdev_dataset = dataset_base.copy({
     'label_map': COCO_LABEL_MAP
 })
 
+#============================================PASCAL_SBD=======================================#
 PASCAL_CLASSES = ("aeroplane", "bicycle", "bird", "boat", "bottle",
                   "bus", "car", "cat", "chair", "cow", "diningtable",
                   "dog", "horse", "motorbike", "person", "pottedplant",
@@ -384,6 +386,7 @@ activation_func = Config({
 
 # ----------------------- FPN DEFAULTS ----------------------- #
 
+# =====================================FPN网络的配置=====================================#
 fpn_base = Config({
     # The number of features to have in each FPN layer
     'num_features': 256,
@@ -658,7 +661,7 @@ yolact_base_config = coco_base_config.copy({
 
     # Dataset stuff
     'dataset': coco2017_dataset,
-    'num_classes': len(coco2017_dataset.class_names) + 1,
+    'num_classes': len(coco2017_dataset.class_names) + 1,  # +1 for background category
 
     # Image Size
     'max_size': 550,
